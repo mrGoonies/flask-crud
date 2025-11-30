@@ -1,0 +1,61 @@
+from flask import Flask, request
+from typing import List
+
+app = Flask(__name__)
+
+
+stores: List[dict] = [
+    {
+        "name": "Store 1",
+        "items": [
+            {
+                "name": "Item A",
+                "price": 10.99,
+                "quantity": 5,
+            },
+            {
+                "name": "Item B",
+                "price": 5.49,
+                "quantity": 10,
+            }
+        ]
+    },
+    {
+        "name": "Store 2",
+        "items": [
+            {
+                "name": "Item C",
+                "price": 7.99,
+                "quantity": 3,
+            }
+        ]
+    }
+]
+
+
+@app.get('/stores')
+def get_stores() -> dict:
+    """ Devuelve el nombre y items para cada tienda almacenada.
+
+    Returns:
+        dict: Un diccionario con la lista de tiendas y sus items.
+    """
+    return {"stores": stores}
+
+@app.post('/store')
+def create_store() -> str:
+    """ Creamos una nueva tienda y almacenamos en la list.
+
+    Returns:
+        str: Mensaje de confirmación.
+    """
+    request_data = request.get_json()
+    new_store = {"name": request_data["name"], "items": []}
+
+    if new_store["name"] not in stores:
+        stores.append(new_store)
+
+        return "Nueva tienda almacenada con éxito.", 201
+    else:
+        return "La tienda ya existe.", 201
+
