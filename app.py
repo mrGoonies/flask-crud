@@ -62,9 +62,6 @@ def create_store() -> str:
     return "Se ha creado la nueva tienda", 201
 
 
-
-
-
 @app.post("/store/<string:store_name>/item")
 def create_item_for_store(store_name: str) -> str:
     request_data = request.get_json()
@@ -79,3 +76,19 @@ def create_item_for_store(store_name: str) -> str:
             store["items"].append(post_data)
             return "Item agregado a tienda especificada con éxito.", 201
     return "La tienda no existe.", 404
+
+
+@app.get("/store/<string:store_name>")
+def get_specific_store_data(store_name):
+    for store in stores:
+        if store["name"] == store_name:
+            return store, 201
+    return "La tienda ingresada no existe", 404
+
+
+@app.get("/store/<string:name>/items")
+def get_items_for_store(name):
+    for store in stores:
+        if store["name"] == name:
+            return store["items"], 201
+    return "La tienda ingresada no existe", 404
