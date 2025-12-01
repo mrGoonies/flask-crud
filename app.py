@@ -53,12 +53,16 @@ def create_store() -> str:
     request_data = request.get_json()
     new_store = {"name": request_data["name"], "items": []}
 
-    if new_store["name"] not in stores:
-        stores.append(new_store)
+    for store in stores:
+        if store["name"] == new_store["name"]:
+            return "La tienda ya existe", 404
 
-        return "Nueva tienda almacenada con éxito.", 201
-    else:
-        return "La tienda ya existe.", 201
+    # Si no existe, agregar la nueva tienda y retornar 201
+    stores.append(new_store)
+    return "Se ha creado la nueva tienda", 201
+
+
+
 
 
 @app.post("/store/<string:store_name>/item")
@@ -69,7 +73,6 @@ def create_item_for_store(store_name: str) -> str:
         "price": request_data["price"],
         "quantity": request_data["quantity"],
     }
-
 
     for store in stores:
         if store["name"] == store_name:
