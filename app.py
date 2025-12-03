@@ -64,6 +64,14 @@ def create_store() -> str:
 
 @app.post("/store/<string:store_name>/item")
 def create_item_for_store(store_name: str) -> str:
+    """Agregamos items para una tienda en especifico.
+
+    Args:
+        store_name (str): Nombre de la tienda a trabajar.
+
+    Returns:
+        str: Mensaje descriptivo respecto a la accion que se realizo.
+    """
     request_data = request.get_json()
     post_data: dict = {
         "name": request_data["name"],
@@ -79,7 +87,15 @@ def create_item_for_store(store_name: str) -> str:
 
 
 @app.get("/store/<string:store_name>")
-def get_specific_store_data(store_name):
+def get_specific_store_data(store_name: str):
+    """Obtenemos todos los items que se encuentran almacenados en una tienda especifica junto al nombre de la tienda
+
+    Args:
+        store_name (str): Nombre de la tienda a listar items almacenados.
+
+    Returns:
+        Si la tienda existe, devuelve el diccionario con todos los items almacenados para la tienda, en caso contrario, devuelve un mensaje indicando que la tienda no existe.
+    """
     for store in stores:
         if store["name"] == store_name:
             return store, 201
@@ -88,6 +104,12 @@ def get_specific_store_data(store_name):
 
 @app.get("/store/<string:name>/items")
 def get_items_for_store(name):
+    """Obtener items almacenados dentro de una tienda creada
+
+    Args:
+        name (str): Nombre de la tienda a mostrar items almacenados.
+
+    """
     for store in stores:
         if store["name"] == name:
             return store["items"], 201
